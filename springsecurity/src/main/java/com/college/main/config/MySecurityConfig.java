@@ -19,5 +19,16 @@ public class MySecurityConfig {
 	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
+	@Bean
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    	http.csrf(csrf->csrf.disable())
+    	.authorizeHttpRequests()
+    	.requestMatchers("/users/").hasRole("ADMIN")
+    	.requestMatchers("/users/{uname}").permitAll()
+    	.anyRequest().authenticated()
+    	.and()
+    	.httpBasic();
+        return http.build();// Returns Security filter chain
+    }
   
 }
